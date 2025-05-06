@@ -30,8 +30,8 @@ Get up and running in just a few steps!
 ### Steps to Success
 1. **Clone the Repo**
    ```bash
-   git clone https://github.com/Ishanoshada/lottery-predict.git
-   cd lottery-predict
+   git clone https://github.com/Ishanoshada/Lottery-Predict.git
+   cd Lottery-Predict
    ```
 
 2. **Install Dependencies**
