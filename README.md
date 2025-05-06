@@ -116,3 +116,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 Got questions or ideas? Open an issue on GitHub or reach out to the maintainer at [ic31908@gmail.com](mailto:ic31908@gmail.com).
 
 Let’s predict those winning numbers together! 💰
+
+![Views](https://dynamic-repo-badges.vercel.app/svg/count/6/Repository%20Views/lottery-predict)
