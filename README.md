@@ -1,7 +1,10 @@
 
 # 🎰 Lottery-Predict: Your Ticket to Winning Big! 🎉
 
+
 Welcome to **Lottery-Predict**, the ultimate web app that turns your lottery dreams into reality! Upload your past lottery data, and let our intelligent algorithms predict your next winning numbers with style and precision. Ready to strike it lucky? 🍀
+
+![bnr](https://github.com/user-attachments/assets/514e462d-d465-4d4d-823f-18b92ff11dcb)
 
 ## 🌟 What is Lottery-Predict?
 
