@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Lottery Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --secondary: #4b0082;
+            --accent: #9370db;
+            --text: #f8f9fa;
+            --background: #0a0a18;
+            --card-bg: rgba(20, 20, 40, 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+        
+        .blackhole {
+            position: fixed;
+            bottom: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, 
+                rgba(0,0,0,0) 0%, 
+                rgba(0,0,0,1) 70%);
+            box-shadow: 0 0 100px 40px rgba(76, 0, 153, 0.6);
+            z-index: -1;
+            animation: pulse 10s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 100px 40px rgba(76, 0, 153, 0.6); }
+            100% { box-shadow: 0 0 150px 60px rgba(138, 43, 226, 0.8); }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: shootingStar 6s linear infinite;
+        }
+        
+        @keyframes shootingStar {
+            0% {
+                transform: translate(-100px, -100px) rotate(45deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            20% {
+                transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(45deg);
+                opacity: 0;
+            }
+            100% { opacity: 0; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
+            animation: glow 3s infinite alternate;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(138, 43, 226, 0.7); }
+            100% { text-shadow: 0 0 20px rgba(138, 43, 226, 1), 0 0 30px rgba(147, 112, 219, 0.8); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            font-weight: normal;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .upload-section, .results-section {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .upload-section:hover, .results-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .file-input-container {
+            position: relative;
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-container:hover {
+            border-color: var(--primary);
+            background-color: rgba(138, 43, 226, 0.1);
+        }
+        
+        .file-input-container i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        .file-input-container p {
+            margin-bottom: 10px;
+        }
+        
+        .file-input-container small {
+            opacity: 0.7;
+        }
+        
+        #file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .analyze-btn:active {
+            transform: translateY(0);
+        }
+        
+        .sample-btn {
+            background: linear-gradient(45deg, #6b48ff, #9370db);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .sample-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(147, 112, 219, 0.4);
+        }
+        
+        .sample-btn:active {
+            transform: translateY(0);
+        }
+        
+        .sample-data {
+            margin-top: 20px;
+            display: none;
+            background: rgba(10, 10, 24, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #d1d1f0;
+            white-space: pre-wrap;
+        }
+        
+        .sample-toggle {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+        
+        .sample-toggle:hover {
+            color: var(--primary);
+        }
+        
+        .results-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #result {
+            flex: 1;
+            background: rgba(10, 10, 24, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-y: auto;
+            min-height: 300px;
+            white-space: pre-wrap;
+            color: #d1d1f0;
+        }
+        
+        .prediction-balls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            perspective: 1000px;
+        }
+        
+        .ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.7);
+            animation: float 3s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .ball:nth-child(2) { animation-delay: 0.2s; }
+        .ball:nth-child(3) { animation-delay: 0.4s; }
+        .ball:nth-child(4) { animation-delay: 0.6s; }
+        .ball:nth-child(5) { animation-delay: 0.8s; }
+        .ball:nth-child(6) { animation-delay: 1.0s; }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(10deg); }
+            100% { transform: translateY(0) rotateX(0); }
+        }
+        
+        .show-balls .ball {
+            opacity: 1;
+        }
+        
+        .loading {
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        .error {
+            color: #ff6b6b;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .github-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .github-link {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .github-link:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .prediction-balls {
+                flex-wrap: wrap;
+            }
+            
+            .ball {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div class="blackhole"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-galaxy"></i> Cosmic Lottery</div>
+            <h1>Lottery Number Prediction System</h1>
+            <h2>Upload your Excel data and harness the power of cosmic algorithms</h2>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <h3 class="section-title"><i class="fas fa-upload"></i> Data Upload</h3>
+                <form class="upload-form" id="excel-form">
+                    <div class="file-input-container">
+                        <i class="fas fa-file-excel"></i>
+                        <p id="file-message">Drag & drop your Excel file here</p>
+                        <small id="file-instruction">or click to browse files (.xlsx only)</small>
+                        <input type="file" id="file-input" name="file" accept=".xlsx" required>
+                    </div>
+                    <button type="submit" class="analyze-btn">
+                        <i class="fas fa-chart-scatter"></i>
+                        Analyze & Predict
+                    </button>
+                    <button class="sample-btn" onclick="window.location.href='/previous_data.xlsx'">
+                        <i class="fas fa-download"></i>
+                        Sample File Download
+                    </button>
+                    <button class="sample-toggle" onclick="toggleSampleData()">Show Sample Data</button>
+                    <div class="sample-data" id="sample-data">
+                        Sample Excel Data Format:
+                        ```
+                        Date       | Num1 | Num2 | Num3 | Num4 | Num5 | Num6 | Bonus
+                        2025-May-30| 37   | 51   | 79   |      |      |      | E
+                        2025-May-09| 25   | 72   | 77   |      |      |      | Q
+                        2025-May-22| 42   | 71   | 73   |      |      |      | Q
+                        2025-May-06| 66   | 71   | 77   |      |      |      | Z
+                        2025-May-16| 33   | 48   | 72   |      |      |      | H
+                        2025-Apr-03| 12   | 35   | 45   |      |      |      | T
+                        2025-Apr-14| 20   | 54   | 57   |      |      |      | G
+                        2025-Apr-21| 42   | 49   | 73   |      |      |      | I
+                        2025-Apr-10| 13   | 51   | 52   |      |      |      | O
+                        2025-Apr-01| 27   | 51   | 77   |      |      |      | F
+                        ```
+                        Notes:
+                        - Date format: YYYY-MMM-DD (e.g., 2025-May-30)
+                        - Num1 to Num6: Lottery numbers (up to 6 columns, some may be empty)
+                        - Bonus: Single letter (optional)
+                    </div>
+                </form>
+            </div>
+            
+            <div class="results-section">
+                <h3 class="section-title"><i class="fas fa-star-half-alt"></i> Prediction Results</h3>
+                <div id="result">
+                    <span class="loading">Waiting for file upload <span class="loading-dots"></span></span>
+                </div>
+                <div class="prediction-balls" id="prediction-balls">
+                    <div class="ball">?</div>
+                    <div class="ball">?</div>
+                    <div class="ball">?</div>
+                    <div class="ball">?</div>
+                    <div class="ball">?</div>
+                    <div class="ball">?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="github-info">
+                <i class="fab fa-github"></i>
+                Created by <a href="https://github.com/Ishanoshada/" class="github-link" target="_blank">Ishanoshada</a>
+            </div>
+            <div>
+                <a href="https://github.com/Ishanoshada/some-repo" class="github-link" target="_blank">View Project Repository</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create stars background
+        const starsContainer = document.getElementById('stars-container');
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Create shooting stars
+        function createShootingStars() {
+            for (let i = 0; i < 5; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = `${Math.random() * 50}%`;
+                shootingStar.style.left = `${Math.random() * 100}%`;
+                shootingStar.style.animationDelay = `${Math.random() * 15}s`;
+                starsContainer.appendChild(shootingStar);
+            }
+        }
+        
+        // Handle file selection
+        const fileInput = document.getElementById('file-input');
+        const fileMessage = document.getElementById('file-message');
+        const fileInstruction = document.getElementById('file-instruction');
+        
+        function handleFileChange() {
+            if (fileInput.files.length > 0) {
+                fileMessage.textContent = `File selected: ${fileInput.files[0].name}`;
+                fileInstruction.textContent = "Click 'Analyze & Predict' to continue";
+            } else {
+                fileMessage.textContent = "Drag & drop your Excel file here";
+                fileInstruction.textContent = "or click to browse files (.xlsx only)";
+            }
+        }
+        
+        fileInput.addEventListener('change', handleFileChange);
+        
+        // Toggle sample data visibility
+        function toggleSampleData() {
+            const sampleData = document.getElementById('sample-data');
+            if (sampleData.style.display === 'none' || sampleData.style.display === '') {
+                sampleData.style.display = 'block';
+            } else {
+                sampleData.style.display = 'none';
+            }
+        }
+        
+        // Handle form submission
+        const form = document.getElementById('excel-form');
+        const resultDiv = document.getElementById('result');
+        const predictionBalls = document.getElementById('prediction-balls');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!fileInput.files.length) {
+                resultDiv.innerHTML = '<span class="error">Please select a file first!</span>';
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            resultDiv.innerHTML = '<span class="loading">Uploading file <span class="loading-dots"></span></span>';
+            
+            let source;
+            try {
+                source = new EventSource('/stream');
+                let messages = [];
+                
+                source.onmessage = function(event) {
+                    if (event.data === 'CLEAR') {
+                        messages = [];
+                        resultDiv.innerHTML = '<span class="loading">Processing file <span class="loading-dots"></span></span>';
+                    } else {
+                        messages.push(event.data);
+                        resultDiv.innerHTML = messages.join('\n');
+                        
+                        const finalPredictionMatch = event.data.match(/Prediction for .*: \[(\d+(?:,\s*\d+)*)\]/);
+                        if (finalPredictionMatch) {
+                            const numbers = finalPredictionMatch[1].split(',').map(num => parseInt(num.trim()));
+                            const balls = document.querySelectorAll('.ball');
+                            numbers.slice(0, balls.length).forEach((number, index) => {
+                                if (balls[index]) {
+                                    balls[index].textContent = number;
+                                }
+                            });
+                            predictionBalls.classList.add('show-balls');
+                        }
+                    }
+                };
+                
+                source.onerror = function() {
+                    resultDiv.innerHTML = '<span class="error">Error connecting to server stream</span>';
+                    source.close();
+                };
+                
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                if (source) source.close();
+            }
+        });
+        
+        // Initialize
+        createStars();
+        createShootingStars();
+    </script>
+</body>
+</html>
