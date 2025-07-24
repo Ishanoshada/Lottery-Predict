@@ -6,6 +6,17 @@ Welcome to **Lottery-Predict**, the ultimate web app that turns your lottery dre
 
 ![bnr](https://github.com/user-attachments/assets/514e462d-d465-4d4d-823f-18b92ff11dcb)
 
+## Give us a ⭐️ if you find this project helpful!  
+
+If you like this project, please consider giving it a star ⭐️ on GitHub. Your support motivates me to keep improving it!  
+
+<p align="center">
+  <a href="https://buymeacoffee.com/ishanoshada">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" alt="Buy Me a Coffee">
+  </a>
+</p>
+
+
 ## 🌟 What is Lottery-Predict?
 
 Lottery-Predict is a modern web application built with Flask, designed to analyze historical lottery data from Excel files and forecast future numbers using machine learning magic. With a stunning interface, real-time analysis, and animated predictions, this tool makes lottery prediction both fun and insightful!
